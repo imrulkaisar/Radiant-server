@@ -32,6 +32,7 @@ async function run() {
     const productsData = database.collection("productsData");
     const brandsData = database.collection("brandsData");
     const typesData = database.collection("typesData");
+    const UsersData = database.collection("UsersData");
 
     // get all products data
     app.get("/products", async (req, res) => {
@@ -166,6 +167,26 @@ async function run() {
       const findResult = typesData.find({ slug: reqSlug });
       const result = await findResult.toArray();
 
+      res.send(result);
+    });
+
+    /**
+     * User related APIs
+     * ======================
+     */
+
+    // get all Users
+    app.get("/users", async (req, res) => {
+      const findResult = UsersData.find();
+      const result = await findResult.toArray();
+      res.send(result);
+    });
+
+    // add user
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await UsersData.insertOne(user);
       res.send(result);
     });
 
