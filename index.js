@@ -127,6 +127,7 @@ async function run() {
           name: updateBrand.newName,
           slug: updateBrand.newSlug,
           image: updateBrand.newImage,
+          bannerImages: updateBrand.newBannerImages,
           description: updateBrand.newDescription,
         },
       };
@@ -182,11 +183,33 @@ async function run() {
       res.send(result);
     });
 
+    // get single user with email
+    app.get("/users/:email", async (req, res) => {
+      const reqEmail = req.params.email;
+      const findResult = UsersData.find({ email: reqEmail });
+      const result = await findResult.toArray();
+      res.send(result);
+    });
+
     // add user
     app.post("/users", async (req, res) => {
       const user = req.body;
       console.log(user);
       const result = await UsersData.insertOne(user);
+      res.send(result);
+    });
+
+    // updates user cart items
+    app.patch("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = {
+        $set: {
+          cartItems: user.cartItems,
+        },
+      };
+      console.log(user);
+      const result = await UsersData.updateOne(filter, updateDoc);
       res.send(result);
     });
 
